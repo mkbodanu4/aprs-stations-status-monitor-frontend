@@ -1,10 +1,10 @@
 <?php
 
-if (!file_exists(".env"))
+if (!file_exists(__DIR__ . DIRECTORY_SEPARATOR . ".env"))
     die('Application configuration not found.');
 
 // Parse dotenv file
-$env = file(".env");
+$env = file(__DIR__ . DIRECTORY_SEPARATOR . ".env");
 foreach ($env as $row) {
     $matches = array();
 
