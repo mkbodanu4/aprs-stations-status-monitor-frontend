@@ -3,10 +3,10 @@
 include __DIR__ . DIRECTORY_SEPARATOR . "common.php";
 
 if (getenv("ENABLE_LOCK")) {
-    if (!file_exists(".lock"))
+    if (!file_exists(__DIR__ . DIRECTORY_SEPARATOR . ".lock"))
         exit;
 
-    $lock = file_get_contents(".lock");
+    $lock = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . ".lock");
     if (strlen(trim($lock)) > 0) {
         $parts = explode(" ", trim($lock));
         if (count($parts) === 2) {
@@ -16,7 +16,7 @@ if (getenv("ENABLE_LOCK")) {
                 exit;
         }
     }
-    file_put_contents(".lock", "1" . " " . time());
+    file_put_contents(__DIR__ . DIRECTORY_SEPARATOR . ".lock", "1" . " " . time());
 }
 
 try {
@@ -87,5 +87,5 @@ try {
 }
 
 if (getenv("ENABLE_LOCK")) {
-    file_put_contents(".lock", "0" . " " . time());
+    file_put_contents(__DIR__ . DIRECTORY_SEPARATOR . ".lock", "0" . " " . time());
 }
