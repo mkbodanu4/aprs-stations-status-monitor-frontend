@@ -1,5 +1,7 @@
 <?php
 
+date_default_timezone_set('UTC');
+
 if (!file_exists(__DIR__ . DIRECTORY_SEPARATOR . ".env"))
     die('Application configuration not found.');
 
