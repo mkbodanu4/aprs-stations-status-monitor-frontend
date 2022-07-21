@@ -1,6 +1,6 @@
 <?php
 /*
-    Simple iGate Status Monitor
+    Simple IGate Status Monitor
     Copyright (C) 2022  Bohdan Manko UR5WKM
 
     This program is free software: you can redistribute it and/or modify
@@ -198,7 +198,7 @@ LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Simple iGate Status Monitor</title>
+    <title>Simple IGate Status Monitor</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
@@ -209,7 +209,7 @@ LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
         <div class="row mt-5">
             <div class="col-sm-8">
                 <h3 class="text-primary">
-                    Simple iGate Status Monitor
+                    Simple IGate Status Monitor
                 </h3>
             </div>
             <div class="col-sm-4 text-end">
@@ -408,11 +408,13 @@ LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
             </div>
             <div class="col-md-8">
                 <h3 class="text-primary">
-                    Simple iGate Status Monitor
+                    Simple IGate Status Monitor
                 </h3>
                 <div class="mb-3">
-                    (Very) simple application to collect iGate/Digipeaters status on APRS network. Fully based on <a
-                            href="https://aprs.fi" target="_blank">aprs.fi</a> data.
+                    (Very) simple application to collect IGate/Digipeaters status on APRS network. Based on <a
+                            href="https://aprs.fi" target="_blank">aprs.fi</a> data. Alternatively, own APRS-IS stream processing software could be used..
+                    <br/>
+                    <br/>
                     Inspired by <a
                             href="https://iz7boj.wordpress.com/2019/03/04/aprs-how-to-automatically-monitor-a-group-of-digipeaters-and-i-gate/"
                             target="_blank">IZ7BOJ system</a>.
@@ -420,6 +422,12 @@ LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
                 <div class="mb-3">
                     Source code of this application: <a href="https://github.com/mkbodanu4/simple-igate-status-monitor"
                                                 target="_blank">https://github.com/mkbodanu4/simple-igate-status-monitor</a>
+                    <br/>
+                    <br/>
+                    Source code of Python-based APRS-IS stream processing application: <a href="https://github.com/mkbodanu4/python-igate-status-monitor"
+                                                target="_blank">https://github.com/mkbodanu4/python-igate-status-monitor</a>
+                    <br/>
+                    <br/>
                     WordPress Plugin, that allows to build table with this application data: <a
                             href="https://github.com/mkbodanu4/simple-igate-status-plugin" target="_blank">https://github.com/mkbodanu4/simple-igate-status-plugin</a>
                 </div>
