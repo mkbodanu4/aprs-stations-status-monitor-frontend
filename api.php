@@ -22,9 +22,14 @@ SELECT
     `r`.`region_id` as `region_id`,
     `r`.`title` as `region_title`,
     `c`.`value` as `call_sign`,
-    `s`.`date_last_heard`,
+    `s`.`date`,
+    `s`.`from`,
+    `s`.`via`,
     `s`.`path`,
-    `s`.`date_refreshed`
+    `s`.`symbol`,
+    `s`.`symbol_table`,
+    `s`.`latitude`,
+    `s`.`longitude`
 FROM
     `status` `s`
 LEFT JOIN `call_signs` `c` ON `c`.`call_sign_id` = `s`.`call_sign_id`
