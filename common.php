@@ -33,8 +33,3 @@ try {
 } catch (Exception $e) {
     die('Database connection not established, please check application configuration');
 }
-
-include __DIR__ . DIRECTORY_SEPARATOR . 'aprs_fi.class.php';
-
-$aprs_fi = new aprs_fi(getenv('APRS_FI_API_KEY'), getenv('API_USER_AGENT'));
-

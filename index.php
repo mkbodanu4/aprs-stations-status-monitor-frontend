@@ -347,8 +347,7 @@ LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
             <hr/>
 
             <div class="mt-2 text-end">
-                Data source: <a href="https://aprs.fi" target="_blank">aprs.fi</a><br/>
-                Application: &copy; UR5WKM 2022
+                &copy; UR5WKM 2022
             </div>
         </div>
 
@@ -411,8 +410,7 @@ LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
                     Simple IGate Status Monitor
                 </h3>
                 <div class="mb-3">
-                    (Very) simple application to collect IGate/Digipeaters status on APRS network. Based on <a
-                            href="https://aprs.fi" target="_blank">aprs.fi</a> data. Alternatively, own APRS-IS stream processing software could be used..
+                    (Very) simple application to collect IGate/Digipeaters status on APRS network.
                     <br/>
                     <br/>
                     Inspired by <a
