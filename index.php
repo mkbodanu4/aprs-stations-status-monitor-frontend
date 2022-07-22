@@ -190,6 +190,15 @@ LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
         $regions[] = $row;
     }
     $stmt->close();
+
+    $proposals = array();
+    $stmt = $db->prepare("SELECT * FROM `proposals`;");
+    $stmt->execute();
+    $result = $stmt->get_result();
+    while ($row = $result->fetch_object()) {
+        $proposals[] = $row;
+    }
+    $stmt->close();
 }
 
 ?>
@@ -204,147 +213,198 @@ LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
           integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 </head>
 <body>
-<div class="container">
-    <?php if (isset($_SESSION['logged']) && $_SESSION['logged'] === TRUE) { ?>
-        <div class="row mt-5">
-            <div class="col-sm-8">
-                <h3 class="text-primary">
-                    Simple IGate Status Monitor
-                </h3>
-            </div>
-            <div class="col-sm-4 text-end">
-                <a class="btn btn-danger" href="<?= "index.php?logout"; ?>">
-                    Logout
-                </a>
+<?php if (isset($_SESSION['logged']) && $_SESSION['logged'] === TRUE) { ?>
+    <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+        <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="<?= "index.php"; ?>">
+            Simple IGate Status Monitor
+        </a>
+        <div class="navbar-nav">
+            <div class="nav-item text-nowrap">
+                <a class="nav-link px-3" href="<?= "index.php?logout"; ?>">Sign out</a>
             </div>
         </div>
-    <?php
+    </header>
 
-    if (isset($_GET['result']) && $_GET['result']) {
-        switch ($_GET['result']) {
-            case 'success':
-                ?>
+    <div class="container">
+        <?php
+
+        if (isset($_GET['result']) && $_GET['result']) {
+            switch ($_GET['result']) {
+                case 'success':
+                    ?>
                     <div class="alert alert-success">
                         Operation performed successfully.
                     </div>
-                <?php
-                break;
-            case 'exists':
-                ?>
+                    <?php
+                    break;
+                case 'exists':
+                    ?>
                     <div class="alert alert-danger">
                         Item already found in the system.
                     </div>
-                <?php
-                break;
-            case 'region_error':
-                ?>
+                    <?php
+                    break;
+                case 'region_error':
+                    ?>
                     <div class="alert alert-danger">
                         Please use valid region.
                     </div>
-                <?php
-                break;
-            case 'invalid_request':
-                ?>
+                    <?php
+                    break;
+                case 'invalid_request':
+                    ?>
                     <div class="alert alert-danger">
                         Invalid request.
                     </div>
-                <?php
-                break;
+                    <?php
+                    break;
+            }
         }
-    }
 
-    ?>
+        ?>
+        <h4 class="mt-3 text-center">
+            Saved Call Signs
+        </h4>
         <div class="row mt-2 mb-2">
-            <table class="table">
-                <thead>
-                <tr>
-                    <th>
-                        Region
-                    </th>
-                    <th>
-                        Call Sign/SSID
-                    </th>
-                    <th>
-                        Action
-                    </th>
-                </tr>
-                </thead>
-                <tbody>
-                <?php if (isset($call_signs) && is_array($call_signs) && count($call_signs) > 0) { ?>
-                    <?php foreach ($call_signs as $call_sign) { ?>
+            <div class="col">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>
+                            Region
+                        </th>
+                        <th>
+                            Call Sign
+                        </th>
+                        <th>
+                            Action
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php if (isset($call_signs) && is_array($call_signs) && count($call_signs) > 0) { ?>
+                        <?php foreach ($call_signs as $call_sign) { ?>
+                            <tr>
+                                <td>
+                                    <?= $call_sign->region_title; ?>
+                                </td>
+                                <td>
+                                    <?= $call_sign->call_sign; ?>
+                                </td>
+                                <td>
+                                    <form action="<?= "index.php"; ?>" method="post">
+                                        <input type="hidden" name="action" value="delete">
+                                        <input type="hidden" name="call_sign_id"
+                                               value="<?= $call_sign->call_sign_id; ?>">
+                                        <input type="submit" class="btn btn-sm btn-danger" value="Delete">
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php } ?>
+                    <?php } else { ?>
                         <tr>
-                            <td>
-                                <?= $call_sign->region_title; ?>
-                            </td>
-                            <td>
-                                <?= $call_sign->call_sign; ?>
-                            </td>
-                            <td>
-                                <form action="<?= "index.php"; ?>" method="post">
-                                    <input type="hidden" name="action" value="delete">
-                                    <input type="hidden" name="call_sign_id" value="<?= $call_sign->call_sign_id; ?>">
-                                    <input type="submit" class="btn btn-sm btn-danger" value="Delete">
-                                </form>
+                            <td colspan="3">
+                                No data found in the system.
                             </td>
                         </tr>
                     <?php } ?>
-                <?php } else { ?>
-                    <tr>
-                        <td colspan="3">
-                            No data found in the system.
-                        </td>
-                    </tr>
-                <?php } ?>
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
-
-    <hr/>
-
-        <div class="mt-2">
-            <h4 class="text-success">
-                Add New Call Sign/SSID
-            </h4>
-            <div>
-                <form action="<?= "index.php"; ?>" method="post">
-                    <input type="hidden" name="action" value="add">
-                    <div class="mb-3">
-                        <label for="region_id">
-                            Select Region:
-                        </label>
-                        <select class="form-select" name="region_id" id="region_id" required>
-                            <?php if (isset($regions) && is_array($regions) && count($regions) > 0) { ?>
-                                <?php foreach ($regions as $region) { ?>
-                                    <option value="<?= $region->region_id; ?>">
-                                        <?= $region->title; ?>
+        <div class="row mt-2">
+            <div class="col">
+                <div class="card">
+                    <form action="<?= "index.php"; ?>" method="post">
+                        <div class="card-header">
+                            Add New Call Sign
+                        </div>
+                        <div class="card-body">
+                            <input type="hidden" name="action" value="add">
+                            <div class="mb-3">
+                                <label for="region_id">
+                                    Select Region:
+                                </label>
+                                <select class="form-select" name="region_id" id="region_id" required>
+                                    <?php if (isset($regions) && is_array($regions) && count($regions) > 0) { ?>
+                                        <?php foreach ($regions as $region) { ?>
+                                            <option value="<?= $region->region_id; ?>">
+                                                <?= $region->title; ?>
+                                            </option>
+                                        <?php } ?>
+                                    <?php } ?>
+                                    <option value="">
+                                        Add New One
                                     </option>
-                                <?php } ?>
-                            <?php } ?>
-                            <option value="">
-                                Add New One
-                            </option>
-                        </select>
-                    </div>
-                    <div id="region_title_box" class="d-none mb-3">
-                        <label for="region_title">
-                            New Region:
-                        </label>
-                        <input type="text" class="form-control" name="region_title" id="region_title" min="1" value="">
-                    </div>
-                    <div class="mb-3">
-                        <label for="call_sign">
-                            Call Sign/SSID:
-                        </label>
-                        <input type="text" class="form-control" name="call_sign" id="call_sign" min="3" value=""
-                               required>
-                    </div>
-                    <div>
-                        <input type="submit" class="btn btn-success" value="Add">
-                    </div>
-                </form>
+                                </select>
+                            </div>
+                            <div id="region_title_box" class="d-none mb-3">
+                                <label for="region_title">
+                                    New Region:
+                                </label>
+                                <input type="text" class="form-control" name="region_title" id="region_title" min="1"
+                                       value="">
+                            </div>
+                            <div class="mb-3">
+                                <label for="call_sign">
+                                    Call Sign:
+                                </label>
+                                <input type="text" class="form-control" name="call_sign" id="call_sign" min="3" value=""
+                                       required>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <input type="submit" class="btn btn-success" value="Add">
+                        </div>
+                    </form>
+                </div>
             </div>
 
-            <hr/>
+            <h4 class="mt-3 text-center">
+                Proposed IGates
+            </h4>
+            <div class="row mt-2 mb-2">
+                <div class="col">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>
+                                Call Sign
+                            </th>
+                            <th>
+                                From>Path
+                            </th>
+                            <th>
+                                Comment
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php if (isset($proposals) && is_array($proposals) && count($proposals) > 0) { ?>
+                            <?php foreach ($proposals as $proposal) { ?>
+                                <tr>
+                                    <td>
+                                        <?= $proposal->call_sign; ?>
+                                    </td>
+                                    <td>
+                                        <?= $proposal->from . ">" . $proposal->path; ?>
+                                    </td>
+                                    <td>
+                                        <?= $proposal->comment; ?>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        <?php } else { ?>
+                            <tr>
+                                <td colspan="3">
+                                    No data found in the system.
+                                </td>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
             <div class="mt-2 text-end">
                 &copy; UR5WKM 2022
@@ -380,7 +440,9 @@ LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
                 };
             });
         </script>
-    <?php } else { ?>
+    </div>
+<?php } else { ?>
+    <div class="container">
         <div class="row mt-5">
             <div class="col-md-4 mb-5 mb-md-0">
                 <div class="card">
@@ -419,11 +481,12 @@ LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
                 </div>
                 <div class="mb-3">
                     Source code of this application: <a href="https://github.com/mkbodanu4/simple-igate-status-monitor"
-                                                target="_blank">https://github.com/mkbodanu4/simple-igate-status-monitor</a>
+                                                        target="_blank">https://github.com/mkbodanu4/simple-igate-status-monitor</a>
                     <br/>
                     <br/>
-                    Source code of Python-based APRS-IS stream processing application: <a href="https://github.com/mkbodanu4/python-igate-status-monitor"
-                                                target="_blank">https://github.com/mkbodanu4/python-igate-status-monitor</a>
+                    Source code of Python-based APRS-IS stream processing application: <a
+                            href="https://github.com/mkbodanu4/python-igate-status-monitor"
+                            target="_blank">https://github.com/mkbodanu4/python-igate-status-monitor</a>
                     <br/>
                     <br/>
                     WordPress Plugin, that allows to build table with this application data: <a
@@ -435,11 +498,11 @@ LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
                 </div>
             </div>
         </div>
-    <?php } ?>
+    </div>
+<?php } ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
-            crossorigin="anonymous"></script>
-</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+        crossorigin="anonymous"></script>
 </body>
 </html>

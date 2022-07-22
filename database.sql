@@ -35,3 +35,13 @@ CREATE TABLE `status`
     `activity_longitude`    FLOAT        NULL DEFAULT NULL,
     PRIMARY KEY (`call_sign_id`)
 ) ENGINE = InnoDB;
+
+CREATE TABLE `proposals`
+(
+    `call_sign` VARCHAR(20)  NOT NULL,
+    `date`      DATETIME     NOT NULL,
+    `from`      VARCHAR(20)  NOT NULL,
+    `path`      VARCHAR(255) NOT NULL,
+    `comment`   TEXT         NULL DEFAULT NULL,
+    PRIMARY KEY (`call_sign`)
+) ENGINE = InnoDB;
