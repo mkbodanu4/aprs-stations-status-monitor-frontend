@@ -23,13 +23,20 @@ SELECT
     `r`.`title` as `region_title`,
     `c`.`value` as `call_sign`,
     `s`.`date`,
-    `s`.`from`,
-    `s`.`via`,
-    `s`.`path`,
-    `s`.`symbol`,
-    `s`.`symbol_table`,
-    `s`.`latitude`,
-    `s`.`longitude`
+    `s`.`beacon_date`,
+    `s`.`beacon_from`,
+    `s`.`beacon_path`,
+    `s`.`beacon_symbol`,
+    `s`.`beacon_symbol_table`,
+    `s`.`beacon_latitude`,
+    `s`.`beacon_longitude`,
+    `s`.`activity_date`,
+    `s`.`activity_from`,
+    `s`.`activity_path`,
+    `s`.`activity_symbol`,
+    `s`.`activity_symbol_table`,
+    `s`.`activity_latitude`,
+    `s`.`activity_longitude`
 FROM
     `status` `s`
 LEFT JOIN `call_signs` `c` ON `c`.`call_sign_id` = `s`.`call_sign_id`
