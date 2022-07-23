@@ -1,25 +1,24 @@
-# Simple IGate Status Monitor
+# APRS Stations Status Monitor Frontend
 
-(Very) simple PHP application to monitor IGate/Digipeaters status on APRS network.
-Requires [Python IGate Status Monitor](https://github.com/mkbodanu4/python-igate-status-monitor) for APRS-IS packet
-processing. Feel free to use this application alone or with
-my [WordPress Plugin](https://github.com/mkbodanu4/simple-igate-status-plugin).
+PHP-based dashboard and API of APRS Stations Status Monitor
+Requires [Python-based Backend](https://github.com/mkbodanu4/aprs-stations-status-monitor-backend) as data collector.
 
-Inspired by IZ7BOJ's [APRS-dashboard](https://github.com/IZ7BOJ/APRS_dashboard)
+Feel free to use this application standalone or with [WordPress Plugin](https://github.com/mkbodanu4/aprs-stations-status-plugin).
 
-Demo: [at MicroApp](https://apps.manko.pro/igate-status/)
+Demo: installed at authors portal [MicroApp](https://apps.manko.pro/aprs-stations-status-monitor-frontend/)
+
+## Requirements
+
+PHP 7.0 or higher
 
 ## Installation
 
-1. Upload code to your server or hosting, that supports PHP7 or higher.
+1. Upload code to your server or hosting.
 2. Create MySQL database and import *database.sql* file.
 3. Rename *.env_example* to *.env*
-4. Change all configurations in *.env* file to your own.
-5. Install [Python IGate Status Monitor](https://github.com/mkbodanu4/python-igate-status-monitor)
-6. Install WordPress Plugin to your WordPress site and configure this application API URL.
-7. Done!
+4. Update configurations in *.env* to your own.
+5. Install [Backend](https://github.com/mkbodanu4/aprs-stations-status-monitor-backend)
+6. Login with the master password from the configuration and add stations you want to monitor.
+7. Optionally install WordPress Plugin to your WordPress site.
 
-## License
-
-GPL v3
 
