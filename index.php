@@ -207,7 +207,7 @@ LEFT JOIN `groups` `r` ON `r`.`group_id` = `c`.`group_id`
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Simple IGate Status Monitor</title>
+    <title>APRS Stations Status Monitor</title>
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
@@ -216,7 +216,7 @@ LEFT JOIN `groups` `r` ON `r`.`group_id` = `c`.`group_id`
 <?php if (isset($_SESSION['logged']) && $_SESSION['logged'] === TRUE) { ?>
     <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
         <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6" href="<?= "index.php"; ?>">
-            Simple IGate Status Monitor
+            APRS Stations Status Monitor
         </a>
         <div class="navbar-nav">
             <div class="nav-item text-nowrap">
@@ -361,7 +361,47 @@ LEFT JOIN `groups` `r` ON `r`.`group_id` = `c`.`group_id`
             </div>
 
             <h4 class="mt-3 text-center">
-                Proposed IGates
+                Groups
+            </h4>
+            <div class="row mt-2 mb-2">
+                <div class="col">
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>
+                                Group ID
+                            </th>
+                            <th>
+                                Title
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php if (isset($groups) && is_array($groups) && count($groups) > 0) { ?>
+                            <?php foreach ($groups as $group) { ?>
+                                <tr>
+                                    <td>
+                                        <?= $group->group_id; ?>
+                                    </td>
+                                    <td>
+                                        <?= $group->title; ?>
+                                    </td>
+                                </tr>
+                            <?php } ?>
+                        <?php } else { ?>
+                            <tr>
+                                <td colspan="2">
+                                    No data found in the system.
+                                </td>
+                            </tr>
+                        <?php } ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <h4 class="mt-3 text-center">
+                Not used IGate stations, found by backend.
             </h4>
             <div class="row mt-2 mb-2">
                 <div class="col">
@@ -448,7 +488,7 @@ LEFT JOIN `groups` `r` ON `r`.`group_id` = `c`.`group_id`
                 <div class="card">
                     <form action="<?= "index.php"; ?>" method="post">
                         <div class="card-header">
-                            Please log in to manage Call Signs or SSIDs:
+                            Please log:
                         </div>
                         <div class="card-body">
                             <input type="hidden" name="action" value="login">
@@ -469,10 +509,10 @@ LEFT JOIN `groups` `r` ON `r`.`group_id` = `c`.`group_id`
             </div>
             <div class="col-md-8">
                 <h3 class="text-primary">
-                    Simple IGate Status Monitor
+                    APRS Stations Status Monitor
                 </h3>
                 <div class="mb-3">
-                    (Very) simple application to collect IGate/Digipeaters status on APRS network.
+                    Simple application to collect APRS stations status from APRS-IS network.
                     <br/>
                     <br/>
                     Inspired by <a
@@ -480,17 +520,16 @@ LEFT JOIN `groups` `r` ON `r`.`group_id` = `c`.`group_id`
                             target="_blank">IZ7BOJ system</a>.
                 </div>
                 <div class="mb-3">
-                    Source code of this application: <a href="https://github.com/mkbodanu4/simple-igate-status-monitor"
-                                                        target="_blank">https://github.com/mkbodanu4/simple-igate-status-monitor</a>
+                    Frontend source code: <a href="https://github.com/mkbodanu4/aprs-stations-status-monitor-frontend"
+                                             target="_blank">https://github.com/mkbodanu4/aprs-stations-status-monitor-frontend</a>
                     <br/>
                     <br/>
-                    Source code of Python-based APRS-IS stream processing application: <a
-                            href="https://github.com/mkbodanu4/python-igate-status-monitor"
-                            target="_blank">https://github.com/mkbodanu4/python-igate-status-monitor</a>
+                    Backend source code: <a href="https://github.com/mkbodanu4/aprs-stations-status-monitor-backend"
+                                            target="_blank">https://github.com/mkbodanu4/aprs-stations-status-monitor-backend</a>
                     <br/>
                     <br/>
-                    WordPress Plugin, that allows to build table with this application data: <a
-                            href="https://github.com/mkbodanu4/simple-igate-status-plugin" target="_blank">https://github.com/mkbodanu4/simple-igate-status-plugin</a>
+                    WordPress plugin: <a href="https://github.com/mkbodanu4/aprs-stations-status-plugin"
+                                         target="_blank">https://github.com/mkbodanu4/aprs-stations-status-plugin</a>
                 </div>
                 <div class="mb-3">
                     73!<br/>
