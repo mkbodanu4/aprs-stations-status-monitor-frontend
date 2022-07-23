@@ -5,7 +5,7 @@ Requires [Python-based Backend](https://github.com/mkbodanu4/aprs-stations-statu
 
 Feel free to use this application standalone or with [WordPress Plugin](https://github.com/mkbodanu4/aprs-stations-status-plugin).
 
-Demo: installed at authors portal [MicroApp](https://apps.manko.pro/aprs-stations-status-monitor-frontend/)
+Demo: installed at author's portal [MicroApp](https://apps.manko.pro/aprs-stations-status-monitor-frontend/)
 
 ## Requirements
 
