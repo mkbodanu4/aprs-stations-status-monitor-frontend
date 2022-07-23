@@ -42,35 +42,35 @@ if (count($_POST) > 0) {
         case 'add':
             try {
                 if (isset($_SESSION['logged']) && $_SESSION['logged'] === TRUE) {
-                    $region_id = trim(filter_var($_POST['region_id'], FILTER_SANITIZE_NUMBER_INT));
-                    $region_title = trim(filter_var($_POST['region_title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS));
+                    $group_id = trim(filter_var($_POST['group_id'], FILTER_SANITIZE_NUMBER_INT));
+                    $group_title = trim(filter_var($_POST['group_title'], FILTER_SANITIZE_FULL_SPECIAL_CHARS));
                     $call_sign = trim(filter_var($_POST['call_sign'], FILTER_SANITIZE_FULL_SPECIAL_CHARS));
 
-                    if ($region_id === "" && $region_title) {
-                        $stmt = $db->prepare("SELECT COUNT(*) AS `exists` FROM `regions` WHERE `title` = ? LIMIT 1;");
-                        $stmt->bind_param("s", $region_title);
+                    if ($group_id === "" && $group_title) {
+                        $stmt = $db->prepare("SELECT COUNT(*) AS `exists` FROM `groups` WHERE `title` = ? LIMIT 1;");
+                        $stmt->bind_param("s", $group_title);
                         $stmt->execute();
                         $stmt->bind_result($exists);
                         $stmt->fetch();
                         $stmt->close();
 
                         if (!$exists) {
-                            $stmt = $db->prepare("INSERT INTO `regions`(`title`) VALUES (?);");
-                            $stmt->bind_param("s", $region_title);
+                            $stmt = $db->prepare("INSERT INTO `groups`(`title`) VALUES (?);");
+                            $stmt->bind_param("s", $group_title);
                             $stmt->execute();
-                            $region_id = $stmt->insert_id;
+                            $group_id = $stmt->insert_id;
                             $stmt->close();
                         } else {
-                            $stmt = $db->prepare("SELECT `region_id` FROM `regions` WHERE `title` = ? LIMIT 1;");
-                            $stmt->bind_param("s", $region_title);
+                            $stmt = $db->prepare("SELECT `group_id` FROM `groups` WHERE `title` = ? LIMIT 1;");
+                            $stmt->bind_param("s", $group_title);
                             $stmt->execute();
-                            $stmt->bind_result($region_id);
+                            $stmt->bind_result($group_id);
                             $stmt->fetch();
                             $stmt->close();
                         }
                     }
 
-                    if ($region_id) {
+                    if ($group_id) {
                         $stmt = $db->prepare("SELECT COUNT(*) AS `exists` FROM `call_signs` WHERE `value` = ? LIMIT 1;");
                         $stmt->bind_param("s", $call_sign);
                         $stmt->execute();
@@ -79,8 +79,8 @@ if (count($_POST) > 0) {
                         $stmt->close();
 
                         if (!$exists) {
-                            $stmt = $db->prepare("INSERT INTO `call_signs`(`region_id`,`value`) VALUES (?, ?);");
-                            $stmt->bind_param("is", $region_id, $call_sign);
+                            $stmt = $db->prepare("INSERT INTO `call_signs`(`group_id`,`value`) VALUES (?, ?);");
+                            $stmt->bind_param("is", $group_id, $call_sign);
                             $stmt->execute();
                             $stmt->close();
                             header("Location: index.php?result=success");
@@ -88,7 +88,7 @@ if (count($_POST) > 0) {
                             header("Location: index.php?result=exists");
                         }
                     } else {
-                        header("Location: index.php?result=region_error");
+                        header("Location: index.php?result=group_error");
                     }
 
                     exit;
@@ -125,15 +125,15 @@ if (count($_POST) > 0) {
                             $stmt->execute();
                             $stmt->close();
 
-                            $stmt = $db->prepare("SELECT COUNT(*) as `used` FROM `call_signs` WHERE `region_id` = ?;");
-                            $stmt->bind_param("i", $call_sign->region_id);
+                            $stmt = $db->prepare("SELECT COUNT(*) as `used` FROM `call_signs` WHERE `group_id` = ?;");
+                            $stmt->bind_param("i", $call_sign->group_id);
                             $stmt->execute();
                             $stmt->bind_result($used);
                             $stmt->fetch();
                             $stmt->close();
                             if ($used == 0) {
-                                $stmt = $db->prepare("DELETE FROM `regions` WHERE `region_id` = ? LIMIT 1;");
-                                $stmt->bind_param("i", $call_sign->region_id);
+                                $stmt = $db->prepare("DELETE FROM `groups` WHERE `group_id` = ? LIMIT 1;");
+                                $stmt->bind_param("i", $call_sign->group_id);
                                 $stmt->execute();
                                 $stmt->close();
                             }
@@ -168,12 +168,12 @@ if (isset($_SESSION['logged']) && $_SESSION['logged'] === TRUE) {
     $stmt = $db->prepare("
 SELECT
     `c`.`call_sign_id` as `call_sign_id`,
-    `r`.`region_id` as `region_id`,
-    `r`.`title` as `region_title`,
+    `r`.`group_id` as `group_id`,
+    `r`.`title` as `group_title`,
     `c`.`value` as `call_sign`
 FROM
     `call_signs` `c`
-LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
+LEFT JOIN `groups` `r` ON `r`.`group_id` = `c`.`group_id`
 ;");
     $stmt->execute();
     $result = $stmt->get_result();
@@ -182,12 +182,12 @@ LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
     }
     $stmt->close();
 
-    $regions = array();
-    $stmt = $db->prepare("SELECT * FROM `regions`;");
+    $groups = array();
+    $stmt = $db->prepare("SELECT * FROM `groups`;");
     $stmt->execute();
     $result = $stmt->get_result();
     while ($row = $result->fetch_object()) {
-        $regions[] = $row;
+        $groups[] = $row;
     }
     $stmt->close();
 
@@ -244,10 +244,10 @@ LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
                     </div>
                     <?php
                     break;
-                case 'region_error':
+                case 'group_error':
                     ?>
                     <div class="alert alert-danger">
-                        Please use valid region.
+                        Please use valid group.
                     </div>
                     <?php
                     break;
@@ -271,7 +271,7 @@ LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
                     <thead>
                     <tr>
                         <th>
-                            Region
+                            Group
                         </th>
                         <th>
                             Call Sign
@@ -286,7 +286,7 @@ LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
                         <?php foreach ($call_signs as $call_sign) { ?>
                             <tr>
                                 <td>
-                                    <?= $call_sign->region_title; ?>
+                                    <?= $call_sign->group_title; ?>
                                 </td>
                                 <td>
                                     <?= $call_sign->call_sign; ?>
@@ -322,14 +322,14 @@ LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
                         <div class="card-body">
                             <input type="hidden" name="action" value="add">
                             <div class="mb-3">
-                                <label for="region_id">
-                                    Select Region:
+                                <label for="group_id">
+                                    Select Group:
                                 </label>
-                                <select class="form-select" name="region_id" id="region_id" required>
-                                    <?php if (isset($regions) && is_array($regions) && count($regions) > 0) { ?>
-                                        <?php foreach ($regions as $region) { ?>
-                                            <option value="<?= $region->region_id; ?>">
-                                                <?= $region->title; ?>
+                                <select class="form-select" name="group_id" id="group_id" required>
+                                    <?php if (isset($groups) && is_array($groups) && count($groups) > 0) { ?>
+                                        <?php foreach ($groups as $group) { ?>
+                                            <option value="<?= $group->group_id; ?>">
+                                                <?= $group->title; ?>
                                             </option>
                                         <?php } ?>
                                     <?php } ?>
@@ -338,11 +338,11 @@ LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
                                     </option>
                                 </select>
                             </div>
-                            <div id="region_title_box" class="d-none mb-3">
-                                <label for="region_title">
-                                    New Region:
+                            <div id="group_title_box" class="d-none mb-3">
+                                <label for="group_title">
+                                    New Group:
                                 </label>
-                                <input type="text" class="form-control" name="region_title" id="region_title" min="1"
+                                <input type="text" class="form-control" name="group_title" id="group_title" min="1"
                                        value="">
                             </div>
                             <div class="mb-3">
@@ -413,29 +413,29 @@ LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
 
         <script>
             document.addEventListener("DOMContentLoaded", function (event) {
-                var region_id = document.getElementById('region_id').value;
-                if (region_id === "") {
-                    document.getElementById('region_id').removeAttribute('required');
-                    document.getElementById('region_title').setAttribute('required', 'required');
-                    document.getElementById('region_title_box').classList.remove('d-none');
+                var group_id = document.getElementById('group_id').value;
+                if (group_id === "") {
+                    document.getElementById('group_id').removeAttribute('required');
+                    document.getElementById('group_title').setAttribute('required', 'required');
+                    document.getElementById('group_title_box').classList.remove('d-none');
                 } else {
-                    document.getElementById('region_id').setAttribute('required', 'required');
-                    document.getElementById('region_title').removeAttribute('required');
-                    document.getElementById('region_title').value = "";
-                    document.getElementById('region_title_box').classList.add('d-none');
+                    document.getElementById('group_id').setAttribute('required', 'required');
+                    document.getElementById('group_title').removeAttribute('required');
+                    document.getElementById('group_title').value = "";
+                    document.getElementById('group_title_box').classList.add('d-none');
                 }
 
-                document.getElementById('region_id').onchange = function () {
-                    var region_id = document.getElementById('region_id').value;
-                    if (region_id === "") {
-                        document.getElementById('region_id').removeAttribute('required');
-                        document.getElementById('region_title').setAttribute('required', 'required');
-                        document.getElementById('region_title_box').classList.remove('d-none');
+                document.getElementById('group_id').onchange = function () {
+                    var group_id = document.getElementById('group_id').value;
+                    if (group_id === "") {
+                        document.getElementById('group_id').removeAttribute('required');
+                        document.getElementById('group_title').setAttribute('required', 'required');
+                        document.getElementById('group_title_box').classList.remove('d-none');
                     } else {
-                        document.getElementById('region_id').setAttribute('required', 'required');
-                        document.getElementById('region_title').removeAttribute('required');
-                        document.getElementById('region_title').value = "";
-                        document.getElementById('region_title_box').classList.add('d-none');
+                        document.getElementById('group_id').setAttribute('required', 'required');
+                        document.getElementById('group_title').removeAttribute('required');
+                        document.getElementById('group_title').value = "";
+                        document.getElementById('group_title_box').classList.add('d-none');
                     }
                 };
             });

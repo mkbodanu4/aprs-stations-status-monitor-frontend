@@ -7,33 +7,33 @@ if (!isset($_GET['key']) || $_GET['key'] !== getenv('API_KEY')) {
     exit;
 }
 
-$regions = array();
-$regions_stmt = $db->prepare("SELECT * FROM `regions`;");
-$regions_stmt->execute();
-$regions_result = $regions_stmt->get_result();
-while ($regions_row = $regions_result->fetch_object()) {
-    $regions[] = $regions_row;
+$groups = array();
+$groups_stmt = $db->prepare("SELECT * FROM `groups`;");
+$groups_stmt->execute();
+$groups_result = $groups_stmt->get_result();
+while ($groups_row = $groups_result->fetch_object()) {
+    $groups[] = $groups_row;
 }
-$regions_stmt->close();
+$groups_stmt->close();
 
 $call_signs = array();
 $call_signs_stmt = $db->prepare("
 SELECT
     `c`.`call_sign_id` as `call_sign_id`,
-    `r`.`region_id` as `region_id`,
-    `r`.`title` as `region_title`,
+    `r`.`group_id` as `group_id`,
+    `r`.`title` as `group_title`,
     `c`.`value` as `call_sign`
 FROM
     `call_signs` `c`
-LEFT JOIN `regions` `r` ON `r`.`region_id` = `c`.`region_id`
+LEFT JOIN `groups` `r` ON `r`.`group_id` = `c`.`group_id`
 ;");
 $call_signs_stmt->execute();
 $call_signs_result = $call_signs_stmt->get_result();
 while ($call_signs_row = $call_signs_result->fetch_object()) {
     $call_sign = array(
         'call_sign' => $call_signs_row->call_sign,
-        'region_id' => $call_signs_row->region_id,
-        'region_title' => $call_signs_row->region_title,
+        'group_id' => $call_signs_row->group_id,
+        'group_title' => $call_signs_row->group_title,
         'date_last_activity' => NULL,
         'last_activity' => NULL,
         'last_from' => NULL,
@@ -254,7 +254,7 @@ $call_signs_stmt->close();
 http_response_code(200);
 header("Content-type:application/json");
 echo json_encode(array(
-    'regions' => $regions,
+    'groups' => $groups,
     'data' => $call_signs
 ));
 exit;

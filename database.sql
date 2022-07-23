@@ -1,18 +1,18 @@
+CREATE TABLE `groups`
+(
+    `group_id` INT          NOT NULL AUTO_INCREMENT,
+    `title`     VARCHAR(100) NOT NULL,
+    PRIMARY KEY (`group_id`),
+    UNIQUE `title` (`title`(100))
+) ENGINE = InnoDB;
+
 CREATE TABLE `call_signs`
 (
     `call_sign_id` INT         NOT NULL AUTO_INCREMENT,
     `value`        VARCHAR(20) NOT NULL,
-    `region_id`    INT         NOT NULL,
+    `group_id`    INT         NOT NULL,
     PRIMARY KEY (`call_sign_id`),
     UNIQUE `call_sign_value` (`value`(20))
-) ENGINE = InnoDB;
-
-CREATE TABLE `regions`
-(
-    `region_id` INT          NOT NULL AUTO_INCREMENT,
-    `title`     VARCHAR(100) NOT NULL,
-    PRIMARY KEY (`region_id`),
-    UNIQUE `title` (`title`(100))
 ) ENGINE = InnoDB;
 
 CREATE TABLE `proposals`
